@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Шагай (КПП)</title>
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+}
+
+.app-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.screen {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.hidden {
+    display: none !important;
+}
+
+.card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 32px rgba(142, 82, 211, 0.2);
+}
+
+.app-title {
+    color: #8b5cf6;
+    font-size: 2em;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    color: #8b5cf6;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e0c3fc;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+    color: white;
+    width: 100%;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+
+.btn-secondary {
+    background: #e0c3fc;
+    color: #8b5cf6;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.btn-secondary:hover {
+    background: #d4b3fc;
+}
+
+.btn-small {
+    padding: 8px 16px;
+    font-size: 14px;
+    background: #f3e8ff;
+    color: #8b5cf6;
+}
+
+.btn-small:hover {
+    background: #e9d5ff;
+}
+
+.btn-danger {
+    background: #ef4444;
+    color: white;
+    width: 100%;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+}
+
+.existing-users {
+    margin-top: 30px;
+}
+
+.user-card {
+    background: #f3e8ff;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-card button {
+    padding: 8px 16px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 16px rgba(142, 82, 211, 0.15);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-info span {
+    color: #8b5cf6;
+    font-weight: 600;
+    font-size: 1.1em;
+}
+
+.nav-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    background: white;
+    padding: 10px;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(142, 82, 211, 0.15);
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    background: transparent;
+    color: #8b5cf6;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+    background: #f3e8ff;
+}
+
+.tab-btn.active {
+    background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+    color: white;
+}
+
+.date-display {
+    text-align: center;
+    font-size: 1.1em;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.goal-display {
+    background: linear-gradient(135deg, #f3e8ff 0%, #e0c3fc 100%);
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 25px;
+}
+
+.goal-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.goal-item:last-child {
+    margin-bottom: 0;
+}
+
+.goal-label {
+    color: #8b5cf6;
+    font-weight: 600;
+}
+
+.goal-value {
+    color: #6d28d9;
+    font-size: 1.5em;
+    font-weight: 700;
+}
+
+.result-card {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 15px;
+}
+
+.result-card.warning {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+}
+
+.result-card.error {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+}
+
+.result-stats {
+    margin-top: 15px;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.comparison-grid {
+    display: grid;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.user-comparison-card {
+    background: linear-gradient(135deg, #f3e8ff 0%, #e0c3fc 100%);
+    padding: 20px;
+    border-radius: 16px;
+}
+
+.user-comparison-card.current-user {
+    background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+    color: white;
+}
+
+.user-comparison-card h4 {
+    margin-bottom: 15px;
+}
+
+.progress-bar {
+    background: rgba(255, 255, 255, 0.3);
+    height: 30px;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+    transition: width 0.5s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 0.9em;
+}
+
+.treadmill-progress {
+    margin-top: 10px;
+}
+
+.treadmill-progress .progress-fill {
+    background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
+}
+
+.history-list {
+    display: grid;
+    gap: 15px;
+}
+
+.history-item {
+    background: #f3e8ff;
+    padding: 20px;
+    border-radius: 16px;
+    border-left: 4px solid #8b5cf6;
+}
+
+.history-item.completed {
+    border-left-color: #10b981;
+}
+
+.history-item.partial {
+    border-left-color: #f59e0b;
+}
+
+.history-item.failed {
+    border-left-color: #ef4444;
+}
+
+.history-date {
+    font-weight: 700;
+    color: #8b5cf6;
+    margin-bottom: 10px;
+}
+
+.history-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.history-stat {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.status-badge.success {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-badge.warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-badge.error {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.stats-period {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.stats-grid {
+    display: grid;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, #f3e8ff 0%, #e0c3fc 100%);
+    padding: 20px;
+    border-radius: 16px;
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 2.5em;
+    font-weight: 700;
+    color: #8b5cf6;
+    margin: 10px 0;
+}
+
+.stat-label {
+    color: #666;
+    font-weight: 600;
+}
+
+.chart-container {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    margin-top: 20px;
+}
+
+.bar-chart {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    height: 250px;
+    gap: 10px;
+}
+
+.bar-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.bar {
+    width: 100%;
+    background: linear-gradient(180deg, #8b5cf6 0%, #a78bfa 100%);
+    border-radius: 8px 8px 0 0;
+    transition: all 0.3s ease;
+    min-height: 5px;
+    position: relative;
+}
+
+.bar-label {
+    margin-top: 8px;
+    font-size: 0.85em;
+    color: #666;
+    font-weight: 600;
+}
+
+.bar-value {
+    position: absolute;
+    top: -25px;
+    width: 100%;
+    text-align: center;
+    font-size: 0.8em;
+    font-weight: 600;
+    color: #8b5cf6;
+}
+
+.danger-zone {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 2px solid #fee2e2;
+}
+
+.danger-zone h3 {
+    color: #ef4444;
+    margin-bottom: 15px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+}
+
+.empty-state::before {
+    content: "📭";
+    display: block;
+    font-size: 3em;
+    margin-bottom: 15px;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+    
+    .card {
+        padding: 20px;
+    }
+    
+    .app-title {
+        font-size: 1.5em;
+    }
+    
+    .header {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .nav-tabs {
+        flex-direction: column;
+    }
+    
+    .history-stats {
+        grid-template-columns: 1fr;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Экран регистрации -->
+        <div id="registration-screen" class="screen">
+            <div class="card">
+                <h1 class="app-title">🚶‍♀️ Шагай (КПП)</h1>
+                <p class="subtitle">Добро пожаловать! Давайте начнём</p>
+                
+                <div class="form-group">
+                    <label>Ваше имя:</label>
+                    <input type="text" id="reg-name" placeholder="Введите имя">
+                </div>
+                
+                <div class="form-group">
+                    <label>Стартовая норма шагов (День 0):</label>
+                    <input type="number" id="reg-base-steps" placeholder="Например, 5000" min="0">
+                </div>
+                
+                <div class="form-group">
+                    <label>Дневная норма дорожки:</label>
+                    <input type="number" id="reg-treadmill-goal" placeholder="Например, 2000 (или 0)" min="0" value="2000">
+                </div>
+                
+                <button class="btn btn-primary" onclick="registerUser()">Зарегистрироваться</button>
+                
+                <div id="existing-users" class="existing-users"></div>
+            </div>
+        </div>
+
+        <!-- Главный экран -->
+        <div id="main-screen" class="screen hidden">
+            <div class="header">
+                <h1 class="app-title">🚶‍♀️ Шагай (КПП)</h1>
+                <div class="user-info">
+                    <span id="current-user-name"></span>
+                    <button class="btn btn-small" onclick="switchUser()">Сменить</button>
+                </div>
+            </div>
+
+            <div class="nav-tabs">
+                <button class="tab-btn active" onclick="showTab('today')">Сегодня</button>
+                <button class="tab-btn" onclick="showTab('history')">История</button>
+                <button class="tab-btn" onclick="showTab('stats')">Статистика</button>
+                <button class="tab-btn" onclick="showTab('settings')">Настройки</button>
+            </div>
+
+            <!-- Вкладка "Сегодня" -->
+            <div id="tab-today" class="tab-content">
+                <div class="card">
+                    <h2>📅 Сегодня</h2>
+                    <div class="date-display" id="today-date"></div>
+                    
+                    <div class="goal-display">
+                        <div class="goal-item">
+                            <span class="goal-label">Дневная норма:</span>
+                            <span class="goal-value" id="today-goal">0</span> шагов
+                        </div>
+                        <div class="goal-item">
+                            <span class="goal-label">Норма дорожки:</span>
+                            <span class="goal-value" id="treadmill-goal-display">0</span> шагов
+                        </div>
+                    </div>
+
+                    <div id="today-form">
+                        <div class="form-group">
+                            <label>Всего шагов за день:</label>
+                            <input type="number" id="input-total-steps" placeholder="0" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Из них на дорожке:</label>
+                            <input type="number" id="input-treadmill-steps" placeholder="0" min="0">
+                        </div>
+                        
+                        <button class="btn btn-primary" onclick="saveToday()">Сохранить результат</button>
+                    </div>
+
+                    <div id="today-result" class="hidden">
+                        <div class="result-card" id="result-message"></div>
+                        <button class="btn btn-secondary" onclick="editToday()">Изменить</button>
+                    </div>
+                </div>
+
+                <!-- Сравнение с другими пользователями -->
+                <div class="card" id="today-comparison">
+                    <h3>👥 Результаты всех участников</h3>
+                    <div id="today-comparison-content"></div>
+                </div>
+            </div>
+
+            <!-- Вкладка "История" -->
+            <div id="tab-history" class="tab-content hidden">
+                <div class="card">
+                    <h2>📊 История активности</h2>
+                    <div id="history-content"></div>
+                </div>
+            </div>
+
+            <!-- Вкладка "Статистика" -->
+            <div id="tab-stats" class="tab-content hidden">
+                <div class="card">
+                    <h2>📈 Статистика</h2>
+                    
+                    <div class="stats-period">
+                        <button class="btn btn-small" onclick="showStats('day')">День</button>
+                        <button class="btn btn-small" onclick="showStats('week')">Неделя</button>
+                        <button class="btn btn-small" onclick="showStats('month')">Месяц</button>
+                    </div>
+
+                    <div id="stats-content"></div>
+                </div>
+            </div>
+
+            <!-- Вкладка "Настройки" -->
+            <div id="tab-settings" class="tab-content hidden">
+                <div class="card">
+                    <h2>⚙️ Настройки</h2>
+                    
+                    <div class="form-group">
+                        <label>Текущая базовая норма шагов:</label>
+                        <input type="number" id="settings-base-steps" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Норма дорожки:</label>
+                        <input type="number" id="settings-treadmill-goal" min="0">
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="saveSettings()">Сохранить изменения</button>
+                    
+                    <div class="danger-zone">
+                        <h3>⚠️ Опасная зона</h3>
+                        <button class="btn btn-danger" onclick="deleteAccount()">Удалить аккаунт</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+// Утилиты для работы с датами
+const formatDate = (date) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+    return date.toLocaleDateString('ru-RU', options);
+};
+
+const getDateKey = (date) => {
+    return date.toISOString().split('T')[0];
+};
+
+const getTodayKey = () => {
+    return getDateKey(new Date());
+};
+
+// Работа с localStorage
+const getUsers = () => {
+    const users = localStorage.getItem('stepTracker_users');
+    return users ? JSON.parse(users) : [];
+};
+
+const saveUsers = (users) => {
+    localStorage.setItem('stepTracker_users', JSON.stringify(users));
+};
+
+const getCurrentUserId = () => {
+    return localStorage.getItem('stepTracker_currentUser');
+};
+
+const setCurrentUserId = (userId) => {
+    localStorage.setItem('stepTracker_currentUser', userId);
+};
+
+const getCurrentUser = () => {
+    const userId = getCurrentUserId();
+    const users = getUsers();
+    return users.find(u => u.id === userId);
+};
+
+const updateUser = (user) => {
+    const users = getUsers();
+    const index = users.findIndex(u => u.id === user.id);
+    if (index !== -1) {
+        users[index] = user;
+        saveUsers(users);
+    }
+};
+
+// Мотивационные сообщения
+const getMotivationMessage = (result) => {
+    const messages = {
+        perfect: [
+            "Супер! Цель закрыта 🎉",
+            "Отличная работа! Все выполнено 💪",
+            "Мощно! Сегодня на высоте 🌟",
+            "Браво! Идеальный результат ✨",
+            "Ты на огне! Так держать 🔥"
+        ],
+        treadmillOnly: [
+            "Сегодня мощно! Дорожка выполнена 💪",
+            "Дорожка покорена! Продолжай в том же духе 🎯",
+            "Отличная работа на дорожке! 🏃‍♀️"
+        ],
+        stepsOnly: [
+            "Норма шагов выполнена! Так держать 👏",
+            "Шаги зачтены! Продолжаем движение 🚶‍♀️",
+            "Дневная цель достигнута! Отлично 💫"
+        ],
+        close: [
+            "Совсем чуть-чуть не хватило — завтра наверстаем 🔥",
+            "Почти идеально! Ещё немного усилий 💪",
+            "Хороший результат! Завтра будет лучше 🌈",
+            "Стабильно движешься вперёд! 📈"
+        ],
+        tryAgain: [
+            "Сегодня не сложилось, но завтра новый день! 🌅",
+            "Не сдавайся! Каждый шаг важен 💙",
+            "Бывает! Главное — продолжать двигаться 🚀",
+            "Завтра точно получится лучше! 💪"
+        ]
+    };
+
+    const random = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+    if (result.stepsAchieved && result.treadmillAchieved) {
+        return random(messages.perfect);
+    } else if (result.treadmillAchieved && !result.stepsAchieved) {
+        return random(messages.treadmillOnly);
+    } else if (result.stepsAchieved && !result.treadmillAchieved) {
+        return random(messages.stepsOnly);
+    } else if (result.stepsPercent >= 80 || result.treadmillPercent >= 80) {
+        return random(messages.close);
+    } else {
+        return random(messages.tryAgain);
+    }
+};
+
+// Инициализация приложения
+const init = () => {
+    const users = getUsers();
+    const currentUserId = getCurrentUserId();
+
+    if (users.length === 0 || !currentUserId) {
+        showRegistration();
+    } else {
+        showMainScreen();
+    }
+};
+
+// Регистрация
+const showRegistration = () => {
+    document.getElementById('registration-screen').classList.remove('hidden');
+    document.getElementById('main-screen').classList.add('hidden');
+    
+    displayExistingUsers();
+};
+
+const displayExistingUsers = () => {
+    const users = getUsers();
+    const container = document.getElementById('existing-users');
+    
+    if (users.length === 0) {
+        container.innerHTML = '';
+        return;
+    }
+    
+    container.innerHTML = '<h3 style="color: #8b5cf6; margin-bottom: 15px;">Или войти как:</h3>';
+    
+    users.forEach(user => {
+        const userCard = document.createElement('div');
+        userCard.className = 'user-card';
+        userCard.innerHTML = `
+            <span style="font-weight: 600; color: #8b5cf6;">${user.name}</span>
+            <button class="btn btn-small" onclick="loginUser('${user.id}')">Войти</button>
+        `;
+        container.appendChild(userCard);
+    });
+};
+
+const registerUser = () => {
+    const name = document.getElementById('reg-name').value.trim();
+    const baseSteps = parseInt(document.getElementById('reg-base-steps').value);
+    const treadmillGoal = parseInt(document.getElementById('reg-treadmill-goal').value) || 0;
+    
+    if (!name) {
+        alert('Пожалуйста, введите имя');
+        return;
+    }
+    
+    if (isNaN(baseSteps) || baseSteps < 0) {
+        alert('Пожалуйста, введите корректную стартовую норму');
+        return;
+    }
+    
+    const users = getUsers();
+    const newUser = {
+        id: 'user_' + Date.now(),
+        name: name,
+        baseSteps: baseSteps,
+        treadmillGoal: treadmillGoal,
+        history: {},
+        createdAt: new Date().toISOString()
+    };
+    
+    users.push(newUser);
+    saveUsers(users);
+    setCurrentUserId(newUser.id);
+    
+    showMainScreen();
+};
+
+const loginUser = (userId) => {
+    setCurrentUserId(userId);
+    showMainScreen();
+};
+
+// Главный экран
+const showMainScreen = () => {
+    document.getElementById('registration-screen').classList.add('hidden');
+    document.getElementById('main-screen').classList.remove('hidden');
+    
+    const user = getCurrentUser();
+    document.getElementById('current-user-name').textContent = user.name;
+    
+    showTab('today');
+    updateTodayTab();
+};
+
+const switchUser = () => {
+    if (confirm('Вы уверены, что хотите сменить пользователя?')) {
+        showRegistration();
+    }
+};
+
+// Управление вкладками
+const showTab = (tabName) => {
+    // Скрыть все вкладки
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.add('hidden');
+    });
+    
+    // Убрать активный класс у всех кнопок
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Показать выбранную вкладку
+    document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+    
+    // Активировать кнопку
+    event.target.classList.add('active');
+    
+    // Обновить содержимое
+    if (tabName === 'today') {
+        updateTodayTab();
+    } else if (tabName === 'history') {
+        updateHistoryTab();
+    } else if (tabName === 'stats') {
+        showStats('day');
+    } else if (tabName === 'settings') {
+        updateSettingsTab();
+    }
+};
+
+// Вкладка "Сегодня"
+const updateTodayTab = () => {
+    const user = getCurrentUser();
+    const today = getTodayKey();
+    
+    // Отображаем дату
+    document.getElementById('today-date').textContent = formatDate(new Date());
+    
+    // Рассчитываем норму на сегодня
+    const todayGoal = calculateTodayGoal(user);
+    document.getElementById('today-goal').textContent = todayGoal.toLocaleString();
+    document.getElementById('treadmill-goal-display').textContent = user.treadmillGoal.toLocaleString();
+    
+    // Проверяем, есть ли уже запись за сегодня
+    if (user.history[today]) {
+        showTodayResult(user.history[today], todayGoal, user.treadmillGoal);
+    } else {
+        showTodayForm();
+    }
+    
+    // Обновляем сравнение
+    updateTodayComparison();
+};
+
+const calculateTodayGoal = (user) => {
+    const history = user.history;
+    const dates = Object.keys(history).sort();
+    
+    if (dates.length === 0) {
+        return user.baseSteps;
+    }
+    
+    const lastDate = dates[dates.length - 1];
+    const lastEntry = history[lastDate];
+    
+    return lastEntry.totalSteps + 100;
+};
+
+const showTodayForm = () => {
+    document.getElementById('today-form').classList.remove('hidden');
+    document.getElementById('today-result').classList.add('hidden');
+    document.getElementById('input-total-steps').value = '';
+    document.getElementById('input-treadmill-steps').value = '';
+};
+
+const showTodayResult = (entry, goal, treadmillGoal) => {
+    document.getElementById('today-form').classList.add('hidden');
+    document.getElementById('today-result').classList.remove('hidden');
+    
+    const stepsPercent = Math.round((entry.totalSteps / goal) * 100);
+    const treadmillPercent = treadmillGoal > 0 ? Math.round((entry.treadmillSteps / treadmillGoal) * 100) : 100;
+    
+    const stepsAchieved = entry.totalSteps >= goal;
+    const treadmillAchieved = treadmillGoal === 0 || entry.treadmillSteps >= treadmillGoal;
+    
+    const result = {
+        stepsAchieved,
+        treadmillAchieved,
+        stepsPercent,
+        treadmillPercent
+    };
+    
+    const message = getMotivationMessage(result);
+    
+    let cardClass = 'result-card';
+    if (stepsAchieved && treadmillAchieved) {
+        cardClass += ' success';
+    } else if (stepsPercent >= 80 || treadmillPercent >= 80) {
+        cardClass += ' warning';
+    } else {
+        cardClass += ' error';
+    }
+    
+    const resultHtml = `
+        <div class="${cardClass}">
+            <h3 style="margin-bottom: 15px;">${message}</h3>
+            <div class="result-stats">
+                <div class="stat-row">
+                    <span>Всего шагов:</span>
+                    <strong>${entry.totalSteps.toLocaleString()} / ${goal.toLocaleString()}</strong>
+                </div>
+                <div class="stat-row">
+                    <span>Прогресс:</span>
+                    <strong>${stepsPercent}%</strong>
+                </div>
+                <div class="stat-row">
+                    <span>Дорожка:</span>
+                    <strong>${entry.treadmillSteps.toLocaleString()} / ${treadmillGoal.toLocaleString()}</strong>
+                </div>
+                <div class="stat-row">
+                    <span>Прогресс дорожки:</span>
+                    <strong>${treadmillPercent}%</strong>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('result-message').outerHTML = resultHtml;
+};
+
+const saveToday = () => {
+    const totalSteps = parseInt(document.getElementById('input-total-steps').value);
+    const treadmillSteps = parseInt(document.getElementById('input-treadmill-steps').value);
+    
+    if (isNaN(totalSteps) || totalSteps < 0) {
+        alert('Пожалуйста, введите корректное количество шагов');
+        return;
+    }
+    
+    if (isNaN(treadmillSteps) || treadmillSteps < 0) {
+        alert('Пожалуйста, введите корректное количество шагов на дорожке');
+        return;
+    }
+    
+    if (treadmillSteps > totalSteps) {
+        alert('Шаги на дорожке не могут превышать общее количество шагов');
+        return;
+    }
+    
+    const user = getCurrentUser();
+    const today = getTodayKey();
+    const goal = calculateTodayGoal(user);
+    
+    user.history[today] = {
+        date: today,
+        totalSteps: totalSteps,
+        treadmillSteps: treadmillSteps,
+        goal: goal,
+        treadmillGoal: user.treadmillGoal,
+        timestamp: new Date().toISOString()
+    };
+    
+    updateUser(user);
+    updateTodayTab();
+};
+
+const editToday = () => {
+    const user = getCurrentUser();
+    const today = getTodayKey();
+    const entry = user.history[today];
+    
+    document.getElementById('input-total-steps').value = entry.totalSteps;
+    document.getElementById('input-treadmill-steps').value = entry.treadmillSteps;
+    
+    showTodayForm();
+};
+
+// Сравнение пользователей
+const updateTodayComparison = () => {
+    const users = getUsers();
+    const today = getTodayKey();
+    const currentUserId = getCurrentUserId();
+    
+    const container = document.getElementById('today-comparison-content');
+    container.innerHTML = '';
+    
+    const usersWithData = users.filter(u => u.history[today]);
+    
+    if (usersWithData.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #999;">Пока нет результатов за сегодня</p>';
+        return;
+    }
+    
+    const comparisonGrid = document.createElement('div');
+    comparisonGrid.className = 'comparison-grid';
+    
+    usersWithData.forEach(user => {
+        const entry = user.history[today];
+        const goal = entry.goal;
+        const treadmillGoal = entry.treadmillGoal;
+        
+        const stepsPercent = Math.min(Math.round((entry.totalSteps / goal) * 100), 100);
+        const treadmillPercent = treadmillGoal > 0 ? Math.min(Math.round((entry.treadmillSteps / treadmillGoal) * 100), 100) : 100;
+        
+        const isCurrentUser = user.id === currentUserId;
+        
+        const card = document.createElement('div');
+        card.className = 'user-comparison-card' + (isCurrentUser ? ' current-user' : '');
+        card.innerHTML = `
+            <h4>${user.name} ${isCurrentUser ? '(вы)' : ''}</h4>
+            <div>
+                <div style="margin-bottom: 5px;">
+                    <small>Шаги: ${entry.totalSteps.toLocaleString()} / ${goal.toLocaleString()}</small>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${stepsPercent}%">
+                        ${stepsPercent}%
+                    </div>
+                </div>
+            </div>
+            <div class="treadmill-progress">
+                <div style="margin-bottom: 5px;">
+                    <small>Дорожка: ${entry.treadmillSteps.toLocaleString()} / ${treadmillGoal.toLocaleString()}</small>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${treadmillPercent}%">
+                        ${treadmillPercent}%
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        comparisonGrid.appendChild(card);
+    });
+    
+    container.appendChild(comparisonGrid);
+};
+
+// Вкладка "История"
+const updateHistoryTab = () => {
+    const user = getCurrentUser();
+    const history = user.history;
+    const dates = Object.keys(history).sort().reverse();
+    
+    const container = document.getElementById('history-content');
+    
+    if (dates.length === 0) {
+        container.innerHTML = '<div class="empty-state">История пока пуста. Начните отслеживать свою активность!</div>';
+        return;
+    }
+    
+    const historyList = document.createElement('div');
+    historyList.className = 'history-list';
+    
+    dates.forEach(dateKey => {
+        const entry = history[dateKey];
+        const date = new Date(dateKey);
+        
+        const stepsAchieved = entry.totalSteps >= entry.goal;
+        const treadmillAchieved = entry.treadmillGoal === 0 || entry.treadmillSteps >= entry.treadmillGoal;
+        
+        let status = '';
+        let statusClass = '';
+        
+        if (stepsAchieved && treadmillAchieved) {
+            status = 'Цели выполнены ✅';
+            statusClass = 'completed success';
+        } else if (stepsAchieved || treadmillAchieved) {
+            status = 'Частично выполнено ⚠️';
+            statusClass = 'partial warning';
+        } else {
+            status = 'Цели не выполнены ❌';
+            statusClass = 'failed error';
+        }
+        
+        const item = document.createElement('div');
+        item.className = `history-item ${statusClass}`;
+        item.innerHTML = `
+            <div class="history-date">${formatDate(date)}</div>
+            <div class="history-stats">
+                <div class="history-stat">
+                    Шаги: <strong>${entry.totalSteps.toLocaleString()}</strong> / ${entry.goal.toLocaleString()}
+                </div>
+                <div class="history-stat">
+                    Дорожка: <strong>${entry.treadmillSteps.toLocaleString()}</strong> / ${entry.treadmillGoal.toLocaleString()}
+                </div>
+            </div>
+            <span class="status-badge ${statusClass}">${status}</span>
+        `;
+        
+        historyList.appendChild(item);
+    });
+    
+    container.innerHTML = '';
+    container.appendChild(historyList);
+};
+
+// Вкладка "Статистика"
+const showStats = (period) => {
+    const user = getCurrentUser();
+    const history = user.history;
+    const dates = Object.keys(history).sort();
+    
+    if (dates.length === 0) {
+        document.getElementById('stats-content').innerHTML = '<div class="empty-state">Недостаточно данных для статистики</div>';
+        return;
+    }
+    
+    let filteredDates = dates;
+    const today = new Date();
+    
+    if (period === 'week') {
+        const weekAgo = new Date(today);
+        weekAgo.setDate(weekAgo.getDate() - 7);
+        filteredDates = dates.filter(d => new Date(d) >= weekAgo);
+    } else if (period === 'month') {
+        const monthAgo = new Date(today);
+        monthAgo.setMonth(monthAgo.getMonth() - 1);
+        filteredDates = dates.filter(d => new Date(d) >= monthAgo);
+    } else if (period === 'day') {
+        const todayKey = getTodayKey();
+        filteredDates = dates.filter(d => d === todayKey);
+    }
+    
+    if (filteredDates.length === 0) {
+        document.getElementById('stats-content').innerHTML = '<div class="empty-state">Нет данных за выбранный период</div>';
+        return;
+    }
+    
+    // Вычисляем статистику
+    const totalSteps = filteredDates.reduce((sum, d) => sum + history[d].totalSteps, 0);
+    const totalTreadmill = filteredDates.reduce((sum, d) => sum + history[d].treadmillSteps, 0);
+    const avgSteps = Math.round(totalSteps / filteredDates.length);
+    const avgTreadmill = Math.round(totalTreadmill / filteredDates.length);
+    
+    const goalsAchieved = filteredDates.filter(d => {
+        const entry = history[d];
+        return entry.totalSteps >= entry.goal;
+    }).length;
+    
+    const treadmillAchieved = filteredDates.filter(d => {
+        const entry = history[d];
+        return entry.treadmillGoal === 0 || entry.treadmillSteps >= entry.treadmillGoal;
+    }).length;
+    
+    const maxSteps = Math.max(...filteredDates.map(d => history[d].totalSteps));
+    
+    // Отображаем статистику
+    const statsHtml = `
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Всего шагов</div>
+                <div class="stat-value">${totalSteps.toLocaleString()}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Среднее в день</div>
+                <div class="stat-value">${avgSteps.toLocaleString()}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Максимум за день</div>
+                <div class="stat-value">${maxSteps.toLocaleString()}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Целей выполнено</div>
+                <div class="stat-value">${goalsAchieved}/${filteredDates.length}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Дорожка: всего</div>
+                <div class="stat-value">${totalTreadmill.toLocaleString()}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Дорожка: среднее</div>
+                <div class="stat-value">${avgTreadmill.toLocaleString()}</div>
+            </div>
+        </div>
+    `;
+    
+    // График сравнения пользователей
+    const allUsers = getUsers();
+    const chartHtml = createComparisonChart(allUsers, filteredDates);
+    
+    document.getElementById('stats-content').innerHTML = statsHtml + chartHtml;
+};
+
+const createComparisonChart = (users, dates) => {
+    const currentUserId = getCurrentUserId();
+    
+    const chartData = users.map(user => {
+        const totalSteps = dates.reduce((sum, d) => {
+            return sum + (user.history[d] ? user.history[d].totalSteps : 0);
+        }, 0);
+        
+        const totalTreadmill = dates.reduce((sum, d) => {
+            return sum + (user.history[d] ? user.history[d].treadmillSteps : 0);
+        }, 0);
+        
+        return {
+            name: user.name,
+            steps: totalSteps,
+            treadmill: totalTreadmill,
+            isCurrentUser: user.id === currentUserId
+        };
+    });
+    
+    const maxValue = Math.max(...chartData.map(d => d.steps));
+    
+    const barsHtml = chartData.map(data => {
+        const height = maxValue > 0 ? (data.steps / maxValue * 100) : 0;
+        const treadmillHeight = data.steps > 0 ? (data.treadmill / data.steps * height) : 0;
+        
+        return `
+            <div class="bar-item">
+                <div class="bar" style="height: ${height}%; ${data.isCurrentUser ? 'background: linear-gradient(180deg, #f59e0b 0%, #fbbf24 100%);' : ''}">
+                    <div class="bar-value">${data.steps.toLocaleString()}</div>
+                    <div style="position: absolute; bottom: 0; width: 100%; height: ${treadmillHeight}%; background: linear-gradient(180deg, #10b981 0%, #34d399 100%); border-radius: 8px 8px 0 0;"></div>
+                </div>
+                <div class="bar-label">${data.name}${data.isCurrentUser ? ' (вы)' : ''}</div>
+            </div>
+        `;
+    }).join('');
+    
+    return `
+        <div class="chart-container">
+            <h3 style="margin-bottom: 20px; color: #8b5cf6;">📊 Сравнение участников</h3>
+            <div style="margin-bottom: 15px; font-size: 0.9em; color: #666;">
+                <span style="display: inline-block; width: 15px; height: 15px; background: #8b5cf6; border-radius: 3px; margin-right: 5px;"></span> Общие шаги
+                <span style="display: inline-block; width: 15px; height: 15px; background: #10b981; border-radius: 3px; margin: 0 5px 0 15px;"></span> Шаги на дорожке
+            </div>
+            <div class="bar-chart">
+                ${barsHtml}
+            </div>
+        </div>
+    `;
+};
+
+// Вкладка "Настройки"
+const updateSettingsTab = () => {
+    const user = getCurrentUser();
+    
+    document.getElementById('settings-base-steps').value = user.baseSteps;
+    document.getElementById('settings-treadmill-goal').value = user.treadmillGoal;
+};
+
+const saveSettings = () => {
+    const user = getCurrentUser();
+    
+    const baseSteps = parseInt(document.getElementById('settings-base-steps').value);
+    const treadmillGoal = parseInt(document.getElementById('settings-treadmill-goal').value);
+    
+    if (isNaN(baseSteps) || baseSteps < 0) {
+        alert('Пожалуйста, введите корректную базовую норму');
+        return;
+    }
+    
+    if (isNaN(treadmillGoal) || treadmillGoal < 0) {
+        alert('Пожалуйста, введите корректную норму дорожки');
+        return;
+    }
+    
+    user.baseSteps = baseSteps;
+    user.treadmillGoal = treadmillGoal;
+    
+    updateUser(user);
+    
+    alert('Настройки успешно сохранены! ✅');
+    updateTodayTab();
+};
+
+const deleteAccount = () => {
+    const user = getCurrentUser();
+    
+    if (!confirm(`Вы уверены, что хотите удалить аккаунт ${user.name}? Все данные будут потеряны!`)) {
+        return;
+    }
+    
+    if (!confirm('Это действие нельзя отменить. Продолжить?')) {
+        return;
+    }
+    
+    let users = getUsers();
+    users = users.filter(u => u.id !== user.id);
+    saveUsers(users);
+    
+    localStorage.removeItem('stepTracker_currentUser');
+    
+    init();
+};
+
+// Запуск приложения
+document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
