@@ -818,12 +818,20 @@ body {
 
     // ===== Экран регистрации =====
     const showRegistration = async () => {
-        document.getElementById("registration-screen").classList.remove("hidden");
-        document.getElementById("main-screen").classList.add("hidden");
-        document.getElementById("reg-name").value = "";
-        document.getElementById("reg-base-steps").value = "";
-        await displayExistingUsers();
-    };
+    // 🔥 Если профиль уже выбран — НЕ показываем регистрацию
+    if (currentProfile) {
+        showMainScreen();
+        return;
+    }
+
+    document.getElementById("registration-screen").classList.remove("hidden");
+    document.getElementById("main-screen").classList.add("hidden");
+
+    document.getElementById("reg-name").value = "";
+    document.getElementById("reg-base-steps").value = "";
+
+    await displayExistingUsers();
+};
 
     const displayExistingUsers = async () => {
         const container = document.getElementById("existing-users");
