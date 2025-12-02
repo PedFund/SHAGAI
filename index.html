@@ -684,6 +684,7 @@ body {
     let currentUserId = null;       // id документа в "users"
     let currentProfile = null;      // { name, baseSteps, treadmillGoal, ... }
     let currentHistory = {};        // { "2025-12-02": {...}, ... }
+    const LOCAL_STORAGE_KEY = "shagai-kpp-current-user-id";
 
     // ===== Утилиты дат =====
     const formatDate = (date) => {
@@ -789,32 +790,36 @@ body {
     };
 
   // ===== Инициализация приложения (Auth) =====
-    const init = async () => {
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) {
-                try {
-                    await signInAnonymously(auth);
-                } catch (e) {
-                    console.error("Ошибка анонимной авторизации", e);
-                    alert("Не удалось подключиться к серверу. Попробуйте обновить страницу.");
-                }
-                return;
+   const init = async () => {
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+            try {
+                await signInAnonymously(auth);
+            } catch (e) {
+                console.error("Ошибка анонимной авторизации", e);
+                alert("Не удалось подключиться к серверу. Попробуйте обновить страницу.");
             }
-
-        // ---- Загружаем профиль из Firestore ----
-        const userRef = doc(db, "users", user.uid);
-        const snap = await getDoc(userRef);
-
-        if (snap.exists()) {
-            // 🔥 Вот тут главный момент
-            currentProfile = { id: user.uid, ...snap.data() };
-
-            showMainScreen();   // теперь currentProfile заполнен
-        } else {
-            showRegistration();
+            return;
         }
+
+        // Попытка автологина
+        const savedUserId = localStorage.getItem(LOCAL_STORAGE_KEY);
+
+        if (savedUserId) {
+            try {
+                await loadLogicalUser(savedUserId, { skipSave: true });
+                return;
+            } catch (e) {
+                console.warn("Автовход не удался, очищаем localStorage", e);
+                localStorage.removeItem(LOCAL_STORAGE_KEY);
+            }
+        }
+
+        // Если автологина нет — регистрация
+        showRegistration();
     });
 };
+
 
     // ===== Экран регистрации =====
     const showRegistration = async () => {
@@ -907,22 +912,31 @@ body {
         await loadLogicalUser(userId);
     };
 
-    const loadLogicalUser = async (userId) => {
-        try {
-            const profile = await loadUserDoc(userId);
-            if (!profile) {
-                alert("Пользователь не найден");
-                return;
-            }
-            currentUserId = userId;
-            currentProfile = profile;
-            currentHistory = await loadHistoryForUser(userId);
-            showMainScreen();
-        } catch (e) {
-            console.error("Ошибка входа", e);
-            alert("Не удалось войти. Попробуйте ещё раз.");
+    const loadLogicalUser = async (userId, options = {}) => {
+    const { skipSave = false } = options;
+
+    try {
+        const profile = await loadUserDoc(userId);
+        if (!profile) {
+            alert("Пользователь не найден");
+            return;
         }
-    };
+
+        currentUserId = userId;
+        currentProfile = profile;
+        currentHistory = await loadHistoryForUser(userId);
+
+        if (!skipSave) {
+            localStorage.setItem(LOCAL_STORAGE_KEY, userId);
+        }
+
+        showMainScreen();
+    } catch (e) {
+        console.error("Ошибка входа", e);
+        alert("Не удалось войти. Попробуйте ещё раз.");
+    }
+};
+
 
     // ===== Главный экран =====
     const showMainScreen = () => {
@@ -934,12 +948,17 @@ body {
     };
 
     const switchUser = async () => {
-        if (!confirm("Вы уверены, что хотите сменить пользователя?")) return;
-        currentUserId = null;
-        currentProfile = null;
-        currentHistory = {};
-        await showRegistration();
-    };
+    if (!confirm("Вы уверены, что хотите сменить пользователя?")) return;
+
+    currentUserId = null;
+    currentProfile = null;
+    currentHistory = {};
+
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+
+    await showRegistration();
+};
+
 
     // ===== Вкладки =====
     const showTab = async (tabName, btn) => {
@@ -1413,7 +1432,11 @@ body {
             currentUserId = null;
             currentProfile = null;
             currentHistory = {};
+    
+            localStorage.removeItem(LOCAL_STORAGE_KEY);
+
             await showRegistration();
+
         } catch (e) {
             console.error("Ошибка удаления аккаунта", e);
             alert("Не удалось удалить аккаунт.");
