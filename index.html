@@ -820,14 +820,27 @@ const getMotivationMessage = (result) => {
 
 // Расчёт дневной нормы по истории
 const calculateTodayGoal = (user) => {
-    const history = user.history;
-    const days = Object.keys(history).length;
+    const history = user.history || {}; // если нет истории – создаём пустую
 
-    // Норма = базовая + (кол-во дней * 100)
-    const goal = user.baseSteps + (days * 100);
+    const dates = Object.keys(history).sort();
 
-    // Ограничение сверху
-    return Math.min(goal, 10000);
+    // Если ещё нет записей – показываем стартовую норму
+    if (dates.length === 0) {
+        return user.baseSteps;
+    }
+
+    // Берём последний факт
+    const lastDate = dates[dates.length - 1];
+    const lastEntry = history[lastDate];
+
+    // Ваша новая логика: увеличиваем на 100 пока < 10000
+    let nextGoal = lastEntry.goal + 100;
+
+    if (nextGoal > 10000) {
+        nextGoal = 10000;
+    }
+
+    return nextGoal;
 };
 
 // ===== Инициализация приложения =====
