@@ -819,14 +819,15 @@ const getMotivationMessage = (result) => {
 };
 
 // Расчёт дневной нормы по истории
-const calculateTodayGoal = (baseSteps, history) => {
-    const dates = Object.keys(history || {}).sort();
-    if (dates.length === 0) {
-        return baseSteps;
-    }
-    const lastDate = dates[dates.length - 1];
-    const lastEntry = history[lastDate];
-    return lastEntry.totalSteps + 100;
+const calculateTodayGoal = (user) => {
+    const history = user.history;
+    const days = Object.keys(history).length;
+
+    // Норма = базовая + (кол-во дней * 100)
+    const goal = user.baseSteps + (days * 100);
+
+    // Ограничение сверху
+    return Math.min(goal, 10000);
 };
 
 // ===== Инициализация приложения =====
