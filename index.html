@@ -765,18 +765,54 @@ body {
     };
 
     const calculateTodayGoal = (baseSteps, historyObj) => {
-        const history = historyObj || {};
-        const dates = Object.keys(history).sort();
-        if (!dates.length) return baseSteps;
+    const history = historyObj || {};
+    const dates = Object.keys(history).sort();
 
-        const lastDate = dates[dates.length - 1];
-        const lastEntry = history[lastDate] || {};
+    // Если истории ещё нет — стартовая норма
+    if (!dates.length) return baseSteps;
 
-        const previousGoal = typeof lastEntry.goal === "number" ? lastEntry.goal : baseSteps;
-        let nextGoal = previousGoal + 100;
-        if (nextGoal > 10000) nextGoal = 10000;
-        return nextGoal;
-    };
+    // Берём последний день, где есть зафиксированные данные
+    const lastDate = dates[dates.length - 1];
+    const lastEntry = history[lastDate];
+
+    if (
+        !lastEntry ||
+        typeof lastEntry.totalSteps !== "number" ||
+        typeof lastEntry.goal !== "number"
+    ) {
+        // Нет валидных данных — норма не меняется
+        return baseSteps;
+    }
+
+    const N = lastEntry.goal;        // предыдущая норма
+    const S = lastEntry.totalSteps;  // фактические шаги
+    const P = (S / N) * 100;         // процент выполнения
+
+    let nextGoal = N;
+
+    // 🟢 Освоено
+    if (P >= 100) {
+        nextGoal = N + 200;
+
+    // 🟡 Почти освоено
+    } else if (P >= 85) {
+        nextGoal = N;
+
+    // 🔵 Рабочая зона
+    } else if (P >= 60) {
+        nextGoal = N - 100;
+
+    // 🔴 Срыв / жизненные обстоятельства
+    } else {
+        nextGoal = N - 300;
+    }
+
+    // Ограничения безопасности
+    if (nextGoal < baseSteps) nextGoal = baseSteps;
+    if (nextGoal > 10000) nextGoal = 10000;
+
+    return Math.round(nextGoal);
+};
 
     // ===== Мотивационные сообщения =====
     const getMotivationMessage = (result) => {
