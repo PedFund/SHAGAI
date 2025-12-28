@@ -601,8 +601,16 @@ body {
                             <span class="goal-value" id="treadmill-goal-display">0</span> шагов
                         </div>
                     </div>
-
-                    <div id="today-form">
+                    <!-- Сегодня: данные ещё не внесены -->
+                    <div id="today-empty" class="hidden">
+                        <div class="empty-state">
+                            Сегодня данные ещё не внесены
+                        </div>
+                        <button class="btn btn-primary" onclick="startTodayInput()">
+                            Внести данные за сегодня
+                        </button>
+                    </div>
+                    <div id="today-form" class="hidden">
                         <div class="form-group">
                             <label>Всего шагов за день:</label>
                             <input type="number" id="input-total-steps" placeholder="0" min="0">
@@ -1131,10 +1139,10 @@ const processMissingDays = async () => {
         document.getElementById("today-goal").textContent = todayGoal.toLocaleString();
         document.getElementById("treadmill-goal-display").textContent = currentProfile.treadmillGoal.toLocaleString();
 
-        if (todayEntry) {
+       if (todayEntry) {
             showTodayResult(todayEntry, todayGoal, currentProfile.treadmillGoal);
         } else {
-            showTodayForm();
+            showTodayEmpty();
         }
 
         await updateTodayComparison();
@@ -1251,6 +1259,16 @@ const processMissingDays = async () => {
         document.getElementById("input-total-steps").value = entry.totalSteps;
         document.getElementById("input-treadmill-steps").value = entry.treadmillSteps;
         showTodayForm();
+    };
+    const showTodayEmpty = () => {
+        document.getElementById("today-empty").classList.remove("hidden");
+        document.getElementById("today-form").classList.add("hidden");
+        document.getElementById("today-result").classList.add("hidden");
+    };
+    
+    const startTodayInput = () => {
+        document.getElementById("today-empty").classList.add("hidden");
+        document.getElementById("today-form").classList.remove("hidden");
     };
 
     const updateTodayComparison = async () => {
@@ -1585,6 +1603,7 @@ const processMissingDays = async () => {
     window.switchUser = switchUser;
     window.showTab = (tabName, btn) => showTab(tabName, btn);
     window.saveToday = saveToday;
+    window.startTodayInput = startTodayInput;
     window.editToday = editToday;
     window.showStats = showStats;
     window.saveSettings = saveSettings;
