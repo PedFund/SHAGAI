@@ -859,14 +859,24 @@ let missingDaysQueue = [];
 
 const findMissingDays = (history, startDateKey) => {
     const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     const start = new Date(startDateKey);
-    const allDays = [];
+    const missingDays = [];
     const currentDate = new Date(start);
 
     while (currentDate < today) {
-        allDays.push(getDateKey(currentDate));
+        const dateKey = getDateKey(currentDate);
+
+        if (!history[dateKey]) {
+            missingDays.push(dateKey);
+        }
+
         currentDate.setDate(currentDate.getDate() + 1);
     }
+
+    return missingDays;
+};
 
     const existingDays = new Set(Object.keys(history));
     const missing = allDays.filter(day => !existingDays.has(day));
